@@ -8,6 +8,8 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
     add_compile_options(-march=native)
 endif()
 
+add_link_options(-rdynamic)
+
 add_subdirectory(third_party/fmt)
 
 add_executable(${PROJECT_NAME}

@@ -1,5 +1,6 @@
 #pragma once
-#include <stdint.h>
+#include <cstdint>
+#include <limits>
 
 namespace rtx {
 
@@ -43,13 +44,53 @@ public:
     subsequences for parallel distributed computations. */
     void long_jump();
 
-private:
+    bool operator==(const Xoshiro256SS&) const;
+
+    bool operator!=(const Xoshiro256SS&) const;
+
+protected:
     uint64_t s[4];
 
     static uint64_t rotl(const uint64_t x, int k)
     {
         return (x << k) | (x >> (64 - k));
     }
+};
+
+class Rand: private Xoshiro256SS
+{
+    using T = uint64_t;
+
+public:
+    using result_type = T;
+
+    static constexpr T min()
+    {
+        return std::numeric_limits<T>::min();
+    }
+
+    static constexpr T max()
+    {
+        return std::numeric_limits<T>::max();
+    }
+
+    Rand();
+
+    Rand(const Rand&) = default;
+
+    explicit Rand(const T t);
+
+    void seed();
+
+    void seed(const T t);
+
+    T operator()();
+
+    void discard(const unsigned long long z);
+
+    bool operator==(const Rand&) const;
+
+    bool operator!=(const Rand&) const;
 };
 
 }  // namespace rtx

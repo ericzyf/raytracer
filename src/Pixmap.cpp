@@ -1,4 +1,7 @@
+#include "debug.hpp"
 #include "Pixmap.hpp"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb/stb_image_write.h>
 
 namespace rtx {
 
@@ -34,6 +37,13 @@ RGB* Pixmap::data()
 const RGB* Pixmap::data() const
 {
     return buf_.get();
+}
+
+bool Pixmap::write_bmp(const char* path) const
+{
+    debug_assert(path);
+
+    return stbi_write_bmp(path, width_, height_, 3, data()) != 0;
 }
 
 }  // namespace rtx

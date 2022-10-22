@@ -25,6 +25,8 @@ public:
 
     const RGB* data() const;
 
+    bool write_bmp(const char* path) const;
+
 private:
     unsigned width_;
     unsigned height_;

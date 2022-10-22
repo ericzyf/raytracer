@@ -47,3 +47,4 @@ bool Pixmap::write_bmp(const char* path) const
 }
 
 }  // namespace rtx
+

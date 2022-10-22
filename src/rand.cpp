@@ -86,3 +86,4 @@ void Xoshiro256SS::long_jump() {
 }
 
 }  // namespace rtx
+

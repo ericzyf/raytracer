@@ -1,4 +1,4 @@
-#include "rand.hpp"
+#include "Rand.hpp"
 
 static constexpr uint64_t DEFAULT_STATE[] = {
     0x94f046e6344f7d3e,

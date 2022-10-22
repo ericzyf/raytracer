@@ -17,7 +17,7 @@ add_subdirectory(third_party/fmt)
 add_executable(${PROJECT_NAME}
     src/main.cpp
     src/debug.cpp
-    src/rand.cpp
+    src/Rand.cpp
 )
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 target_link_libraries(${PROJECT_NAME} fmt)

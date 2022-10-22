@@ -18,6 +18,7 @@ add_executable(${PROJECT_NAME}
     src/main.cpp
     src/debug.cpp
     src/Rand.cpp
+    src/Pixmap.cpp
 )
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 target_link_libraries(${PROJECT_NAME} fmt)

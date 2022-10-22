@@ -2,6 +2,7 @@
 #include "Pixmap.hpp"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb/stb_image_write.h>
+#include <cstring>
 
 namespace rtx {
 
@@ -37,6 +38,11 @@ RGB* Pixmap::data()
 const RGB* Pixmap::data() const
 {
     return buf_.get();
+}
+
+void Pixmap::clear()
+{
+    std::memset(data(), 0, size_ * sizeof(RGB));
 }
 
 bool Pixmap::write_bmp(const char* path, bool flip_y) const

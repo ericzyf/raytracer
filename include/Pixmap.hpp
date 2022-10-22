@@ -25,6 +25,8 @@ public:
 
     const RGB* data() const;
 
+    void clear();
+
     bool write_bmp(const char* path, bool flip_y = true) const;
 
 private:

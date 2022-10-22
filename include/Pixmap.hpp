@@ -19,6 +19,10 @@ public:
 
     unsigned height() const;
 
+    RGB* data();
+
+    const RGB* data() const;
+
 private:
     unsigned width_;
     unsigned height_;

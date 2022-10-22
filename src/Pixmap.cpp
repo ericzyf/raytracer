@@ -21,4 +21,14 @@ unsigned Pixmap::height() const
     return height_;
 }
 
+RGB* Pixmap::data()
+{
+    return buf_.get();
+}
+
+const RGB* Pixmap::data() const
+{
+    return buf_.get();
+}
+
 }  // namespace rtx

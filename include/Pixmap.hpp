@@ -19,6 +19,8 @@ public:
 
     unsigned height() const;
 
+    unsigned size() const;
+
     RGB* data();
 
     const RGB* data() const;

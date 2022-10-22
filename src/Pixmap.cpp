@@ -21,6 +21,11 @@ unsigned Pixmap::height() const
     return height_;
 }
 
+unsigned Pixmap::size() const
+{
+    return size_;
+}
+
 RGB* Pixmap::data()
 {
     return buf_.get();

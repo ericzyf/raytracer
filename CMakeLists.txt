@@ -20,6 +20,10 @@ add_executable(${PROJECT_NAME}
     src/Rand.cpp
     src/Pixmap.cpp
 )
-target_include_directories(${PROJECT_NAME} PRIVATE include)
+target_include_directories(
+    ${PROJECT_NAME} PRIVATE
+    include
+    third_party/stb/include
+)
 target_link_libraries(${PROJECT_NAME} fmt)
 

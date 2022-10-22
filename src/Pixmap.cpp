@@ -39,10 +39,11 @@ const RGB* Pixmap::data() const
     return buf_.get();
 }
 
-bool Pixmap::write_bmp(const char* path) const
+bool Pixmap::write_bmp(const char* path, bool flip_y) const
 {
     debug_assert(path);
 
+    stbi_flip_vertically_on_write(flip_y);
     return stbi_write_bmp(path, width_, height_, 3, data()) != 0;
 }
 

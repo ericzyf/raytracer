@@ -9,13 +9,13 @@ float hit_sphere(const glm::vec3 center, float radius, const Ray& r)
 {
     glm::vec3 oc = r.origin() - center;
     auto a = glm::dot(r.direction(), r.direction());
-    auto b = 2.0f * glm::dot(oc, r.direction());
+    auto h = glm::dot(oc, r.direction());
     auto c = glm::dot(oc, oc) - radius * radius;
-    auto discriminant = b * b - 4 * a * c;
+    auto discriminant = h * h - a * c;
     if (discriminant < 0) {
         return -1.0f;
     } else {
-        return (-b - std::sqrt(discriminant)) / (2.0f * a);
+        return (-h - std::sqrt(discriminant)) / a;
     }
 }
 

@@ -6,6 +6,12 @@
 
 namespace rtx {
 
+RGB::RGB(uint8_t r_, uint8_t g_, uint8_t b_)
+    : r(r_), g(g_), b(b_)
+{
+
+}
+
 RGB::RGB(const glm::vec3 v)
     : r(v.r * 255.999),
       g(v.g * 255.999),

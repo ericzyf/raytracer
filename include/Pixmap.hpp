@@ -12,6 +12,8 @@ struct RGB
 
     RGB() = default;
 
+    RGB(uint8_t r_, uint8_t g_, uint8_t b_);
+
     explicit RGB(const glm::vec3 v);
 };
 

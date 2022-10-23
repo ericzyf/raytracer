@@ -5,8 +5,22 @@
 
 using namespace rtx;
 
+bool hit_sphere(const glm::vec3 center, float radius, const Ray& r)
+{
+    glm::vec3 oc = r.origin() - center;
+    auto a = glm::dot(r.direction(), r.direction());
+    auto b = 2.0f * glm::dot(oc, r.direction());
+    auto c = glm::dot(oc, oc) - radius * radius;
+    auto discriminant = b * b - 4 * a * c;
+    return discriminant > 0;
+}
+
 RGB ray_color(const Ray& r)
 {
+    if (hit_sphere(glm::vec3(0, 0, -1), 0.5f, r)) {
+        return { 255, 0, 0 };
+    }
+
     auto unit_direction = glm::normalize(r.direction());
     float t = 0.5f * (unit_direction.y + 1.0f);
     return RGB(

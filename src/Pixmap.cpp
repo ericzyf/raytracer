@@ -6,6 +6,16 @@
 
 namespace rtx {
 
+RGB::RGB(const glm::vec3 v)
+    : r(v.r * 255.999),
+      g(v.g * 255.999),
+      b(v.b * 255.999)
+{
+    debug_assert(v.r >= 0 && v.r < 1);
+    debug_assert(v.g >= 0 && v.g < 1);
+    debug_assert(v.b >= 0 && v.b < 1);
+}
+
 Pixmap::Pixmap(unsigned w, unsigned h)
     : width_(w),
       height_(h),

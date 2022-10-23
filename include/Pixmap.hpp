@@ -1,4 +1,5 @@
 #pragma once
+#include <glm/vec3.hpp>
 #include <memory>
 
 namespace rtx {
@@ -8,6 +9,10 @@ struct RGB
     uint8_t r;
     uint8_t g;
     uint8_t b;
+
+    RGB() = default;
+
+    explicit RGB(const glm::vec3 v);
 };
 
 class Pixmap

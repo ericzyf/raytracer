@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.18)
 project(rtx)
 set(CMAKE_CXX_STANDARD 17)
 
-add_compile_options(-Wall -pedantic)
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     add_compile_options(-march=native)
 endif()
@@ -31,6 +30,9 @@ add_executable(${PROJECT_NAME}
     src/Rand.cpp
     src/Pixmap.cpp
 )
+
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall -pedantic)
+
 target_include_directories(
     ${PROJECT_NAME} PRIVATE
     include
@@ -38,5 +40,6 @@ target_include_directories(
     third_party/imgui/backends
     third_party/imgui
 )
+
 target_link_libraries(${PROJECT_NAME} fmt OpenGL::GL glm glfw)
 

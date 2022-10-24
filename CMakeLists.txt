@@ -12,12 +12,21 @@ if(UNIX)
     add_link_options(-rdynamic)
 endif()
 
+find_package(OpenGL REQUIRED)
 add_subdirectory(third_party/fmt)
 add_subdirectory(third_party/glm)
 add_subdirectory(third_party/glfw)
 
 add_executable(${PROJECT_NAME}
-    src/main.cpp
+    third_party/imgui/backends/imgui_impl_glfw.cpp
+    third_party/imgui/backends/imgui_impl_opengl3.cpp
+    third_party/imgui/imgui.cpp
+    third_party/imgui/imgui_demo.cpp
+    third_party/imgui/imgui_draw.cpp
+    third_party/imgui/imgui_tables.cpp
+    third_party/imgui/imgui_widgets.cpp
+    #src/main.cpp
+    src/imgui_example.cpp
     src/debug.cpp
     src/Rand.cpp
     src/Pixmap.cpp
@@ -26,6 +35,8 @@ target_include_directories(
     ${PROJECT_NAME} PRIVATE
     include
     third_party/stb/include
+    third_party/imgui/backends
+    third_party/imgui
 )
-target_link_libraries(${PROJECT_NAME} fmt glm glfw)
+target_link_libraries(${PROJECT_NAME} fmt OpenGL::GL glm glfw)
 

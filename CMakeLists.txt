@@ -14,6 +14,7 @@ endif()
 
 add_subdirectory(third_party/fmt)
 add_subdirectory(third_party/glm)
+add_subdirectory(third_party/glfw)
 
 add_executable(${PROJECT_NAME}
     src/main.cpp
@@ -26,5 +27,5 @@ target_include_directories(
     include
     third_party/stb/include
 )
-target_link_libraries(${PROJECT_NAME} fmt glm)
+target_link_libraries(${PROJECT_NAME} fmt glm glfw)
 

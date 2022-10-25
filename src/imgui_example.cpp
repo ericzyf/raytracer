@@ -53,7 +53,7 @@ int main(int, char**)
     const float hidpi_scale = glfw_get_monitor_scale();
 
     // Create window with graphics context
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(1280, 720, "rtx", NULL, NULL);
     if (window == NULL)
         return 1;
     glfwMakeContextCurrent(window);

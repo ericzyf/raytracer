@@ -3,6 +3,8 @@
 // If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 
+#include "debug.hpp"
+#include "ubuntu_mono_ttf.cpp"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -90,6 +92,14 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
+    {
+        auto font = io.Fonts->AddFontFromMemoryCompressedTTF(
+            _ubuntu_mono_ttf_compressed_data,
+            _ubuntu_mono_ttf_compressed_size,
+            16
+        );
+        debug_assert(font);
+    }
 
     // Our state
     bool show_demo_window = true;

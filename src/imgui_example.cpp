@@ -8,6 +8,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include <cmath>
 #include <stdio.h>
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <GLES2/gl2.h>
@@ -24,6 +25,17 @@
 static void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "Glfw Error %d: %s\n", error, description);
+}
+
+static float glfw_get_monitor_scale()
+{
+    float xscale = 1.0f;
+    glfwGetMonitorContentScale(
+        glfwGetPrimaryMonitor(),
+        &xscale, nullptr
+    );
+
+    return xscale;
 }
 
 int main(int, char**)
@@ -56,6 +68,9 @@ int main(int, char**)
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 #endif
 
+    glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
+    const float hidpi_scale = glfw_get_monitor_scale();
+
     // Create window with graphics context
     GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
     if (window == NULL)
@@ -72,6 +87,7 @@ int main(int, char**)
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
+    ImGui::GetStyle().ScaleAllSizes(hidpi_scale);
     //ImGui::StyleColorsClassic();
 
     // Setup Platform/Renderer backends
@@ -96,7 +112,7 @@ int main(int, char**)
         auto font = io.Fonts->AddFontFromMemoryCompressedTTF(
             _ubuntu_mono_ttf_compressed_data,
             _ubuntu_mono_ttf_compressed_size,
-            16
+            std::round(16.0f * hidpi_scale)
         );
         debug_assert(font);
     }

@@ -53,8 +53,8 @@ int main(int, char**)
     const float hidpi_scale = glfw_get_monitor_scale();
 
     // Create window with graphics context
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "rtx", NULL, NULL);
-    if (window == NULL)
+    GLFWwindow* window = glfwCreateWindow(1280, 720, "rtx", nullptr, nullptr);
+    if (!window)
         return 1;
     glfwMakeContextCurrent(window);
     glfwSwapInterval(0); // Disable vsync

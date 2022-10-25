@@ -10,6 +10,7 @@
 #include "imgui_impl_opengl3.h"
 #include <cmath>
 #include <stdio.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
@@ -59,7 +60,9 @@ int main(int, char**)
     glfwMakeContextCurrent(window);
     glfwSwapInterval(0); // Disable vsync
 
-    printf("GL_VERSION: %s\n", glGetString(GL_VERSION));
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        panic_with("Failed to initialize OpenGL context");
+    }
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();

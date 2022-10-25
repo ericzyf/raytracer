@@ -20,6 +20,7 @@ find_package(OpenGL REQUIRED)
 add_subdirectory(third_party/fmt)
 add_subdirectory(third_party/glm)
 add_subdirectory(third_party/glfw)
+add_subdirectory(third_party/glad)
 
 add_executable(${PROJECT_NAME}
     third_party/imgui/backends/imgui_impl_glfw.cpp
@@ -46,5 +47,5 @@ target_include_directories(
     third_party/imgui
 )
 
-target_link_libraries(${PROJECT_NAME} fmt OpenGL::GL glm glfw)
+target_link_libraries(${PROJECT_NAME} fmt OpenGL::GL glm glfw glad)
 

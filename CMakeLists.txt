@@ -30,8 +30,8 @@ add_executable(${PROJECT_NAME}
     third_party/imgui/imgui_draw.cpp
     third_party/imgui/imgui_tables.cpp
     third_party/imgui/imgui_widgets.cpp
-    #src/main.cpp
-    src/imgui_example.cpp
+    src/main.cpp
+    #src/imgui_example.cpp
     src/debug.cpp
     src/Rand.cpp
     src/Pixmap.cpp

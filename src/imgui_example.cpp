@@ -64,6 +64,19 @@ int main(int, char**)
         panic_with("Failed to initialize OpenGL context");
     }
 
+    if (auto gl_vendor = glGetString(GL_VENDOR)) {
+        std::printf("GL_VENDOR: %s\n", gl_vendor);
+    }
+    if (auto gl_renderer = glGetString(GL_RENDERER)) {
+        std::printf("GL_RENDERER: %s\n", gl_renderer);
+    }
+    if (auto gl_version = glGetString(GL_VERSION)) {
+        std::printf("GL_VERSION: %s\n", gl_version);
+    }
+    if (auto gl_shading_language_version = glGetString(GL_SHADING_LANGUAGE_VERSION)) {
+        std::printf("GL_SHADING_LANGUAGE_VERSION: %s\n", gl_shading_language_version);
+    }
+
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();

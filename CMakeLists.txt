@@ -35,6 +35,7 @@ add_executable(${PROJECT_NAME}
     src/debug.cpp
     src/Rand.cpp
     src/Pixmap.cpp
+    src/Sphere.cpp
 )
 
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -pedantic)

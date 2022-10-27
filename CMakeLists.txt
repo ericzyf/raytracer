@@ -37,6 +37,7 @@ add_executable(${PROJECT_NAME}
     src/Pixmap.cpp
     src/Hittable.cpp
     src/Sphere.cpp
+    src/rtweekend.cpp
 )
 
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -pedantic)

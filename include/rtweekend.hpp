@@ -9,3 +9,7 @@ inline float degrees_to_radians(float deg)
     return deg * pi / 180.0f;
 }
 
+float random_float();
+
+float random_float(float min, float max);
+

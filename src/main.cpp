@@ -1,4 +1,5 @@
 #include "rtweekend.hpp"
+#include "Camera.hpp"
 #include "Pixmap.hpp"
 #include "Ray.hpp"
 #include "Sphere.hpp"
@@ -25,6 +26,7 @@ int main(int argc, char* argv[])
     const auto aspect_ratio = 16.0 / 9.0;
     const int image_width = 1280;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
+    const int samples_per_pixel = 100;
 
     // World
     HittableList world;
@@ -32,24 +34,22 @@ int main(int argc, char* argv[])
     world.add(std::make_unique<Sphere>(glm::vec3(0, -100.5f, -1), 100.0f));
 
     // Camera
-    auto viewport_height = 2.0;
-    auto viewport_width = aspect_ratio * viewport_height;
-    auto focal_length = 1.0;
-
-    auto origin = glm::vec3(0);
-    auto horizontal = glm::vec3(viewport_width, 0, 0);
-    auto vertical = glm::vec3(0, viewport_height, 0);
-    auto lower_left_corner =
-        origin - horizontal / 2.0f - vertical / 2.0f - glm::vec3(0, 0, focal_length);
+    Camera cam;
 
     // Render
     Pixmap pm(image_width, image_height);
     for (int j = image_height - 1; j >= 0; --j) {
+        fmt::print(stderr, "Scanlines remaining: {}\n", j);
         for (int i = 0; i < image_width; ++i) {
-            float u = i * 1.0f / (image_width - 1);
-            float v = j * 1.0f / (image_height - 1);
-            Ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
-            pm.data()[j * pm.width() + i] = RGB(ray_color(r, world));
+            auto pixel_color = glm::vec3(0);
+            for (int s = 0; s < samples_per_pixel; ++s) {
+                auto u = (i + random_float()) / (image_width - 1);
+                auto v = (j + random_float()) / (image_height - 1);
+                auto r = cam.get_ray(u, v);
+                pixel_color += ray_color(r, world);
+            }
+            pm.data()[j * pm.width() + i] =
+                RGB(pixel_color / static_cast<float>(samples_per_pixel));
         }
     }
 

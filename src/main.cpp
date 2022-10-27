@@ -7,16 +7,16 @@
 
 using namespace rtx;
 
-RGB ray_color(const Ray& r, const Hittable& world)
+glm::vec3 ray_color(const Ray& r, const Hittable& world)
 {
     HitRecord rec;
     if (world.hit(r, 0, infinity, rec)) {
-        return RGB(0.5f * (rec.normal + glm::vec3(1)));
+        return 0.5f * (rec.normal + glm::vec3(1));
     }
 
     glm::vec3 unit_direction = glm::normalize(r.direction());
     const auto t = 0.5f * (unit_direction.y + 1.0f);
-    return RGB((1.0f - t) * glm::vec3(1) + t * glm::vec3(0.5, 0.7, 1.0));
+    return (1.0f - t) * glm::vec3(1) + t * glm::vec3(0.5, 0.7, 1.0);
 }
 
 int main(int argc, char* argv[])
@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
             float u = i * 1.0f / (image_width - 1);
             float v = j * 1.0f / (image_height - 1);
             Ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
-            pm.data()[j * pm.width() + i] = ray_color(r, world);
+            pm.data()[j * pm.width() + i] = RGB(ray_color(r, world));
         }
     }
 

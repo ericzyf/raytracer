@@ -1,5 +1,7 @@
 #pragma once
 #include "Ray.hpp"
+#include <memory>
+#include <vector>
 
 namespace rtx {
 
@@ -18,6 +20,23 @@ class Hittable
 public:
     virtual bool
     hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const = 0;
+};
+
+class HittableList: public Hittable
+{
+public:
+    HittableList() = default;
+
+    explicit HittableList(std::unique_ptr<Hittable> obj);
+
+    void clear();
+
+    void add(std::unique_ptr<Hittable> obj);
+
+    bool hit(const Ray&, float, float, HitRecord&) const override;
+
+private:
+    std::vector<std::unique_ptr<Hittable>> objects_;
 };
 
 }  // namespace rtx

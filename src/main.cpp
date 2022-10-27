@@ -1,37 +1,22 @@
+#include "rtweekend.hpp"
 #include "Pixmap.hpp"
 #include "Ray.hpp"
+#include "Sphere.hpp"
 #include <fmt/core.h>
 #include <glm/glm.hpp>
 
 using namespace rtx;
 
-float hit_sphere(const glm::vec3 center, float radius, const Ray& r)
+RGB ray_color(const Ray& r, const Hittable& world)
 {
-    glm::vec3 oc = r.origin() - center;
-    auto a = glm::dot(r.direction(), r.direction());
-    auto h = glm::dot(oc, r.direction());
-    auto c = glm::dot(oc, oc) - radius * radius;
-    auto discriminant = h * h - a * c;
-    if (discriminant < 0) {
-        return -1.0f;
-    } else {
-        return (-h - std::sqrt(discriminant)) / a;
-    }
-}
-
-RGB ray_color(const Ray& r)
-{
-    float t = hit_sphere(glm::vec3(0, 0, -1), 0.5f, r);
-    if (t > 0) {
-        auto N = glm::normalize(r.at(t) - glm::vec3(0, 0, -1));
-        return RGB(0.5f * (N + glm::vec3(1)));
+    HitRecord rec;
+    if (world.hit(r, 0, infinity, rec)) {
+        return RGB(0.5f * (rec.normal + glm::vec3(1)));
     }
 
-    auto unit_direction = glm::normalize(r.direction());
-    t = 0.5f * (unit_direction.y + 1.0f);
-    return RGB(
-        (1.0f - t) * glm::vec3(1.0) + t * glm::vec3(0.5, 0.7, 1.0)
-    );
+    glm::vec3 unit_direction = glm::normalize(r.direction());
+    const auto t = 0.5f * (unit_direction.y + 1.0f);
+    return RGB((1.0f - t) * glm::vec3(1) + t * glm::vec3(0.5, 0.7, 1.0));
 }
 
 int main(int argc, char* argv[])
@@ -40,6 +25,11 @@ int main(int argc, char* argv[])
     const auto aspect_ratio = 16.0 / 9.0;
     const int image_width = 1280;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
+
+    // World
+    HittableList world;
+    world.add(std::make_unique<Sphere>(glm::vec3(0, 0, -1), 0.5f));
+    world.add(std::make_unique<Sphere>(glm::vec3(0, -100.5f, -1), 100.0f));
 
     // Camera
     auto viewport_height = 2.0;
@@ -59,7 +49,7 @@ int main(int argc, char* argv[])
             float u = i * 1.0f / (image_width - 1);
             float v = j * 1.0f / (image_height - 1);
             Ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
-            pm.data()[j * pm.width() + i] = ray_color(r);
+            pm.data()[j * pm.width() + i] = ray_color(r, world);
         }
     }
 

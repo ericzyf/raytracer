@@ -10,11 +10,20 @@
 
 using namespace rtx;
 
-glm::vec3 ray_color(const Ray& r, const Hittable& world)
+glm::vec3 ray_color(const Ray& r, const Hittable& world, int depth)
 {
+    if (depth <= 0) {
+        return glm::vec3(0);
+    }
+
     HitRecord rec;
     if (world.hit(r, 0, infinity, rec)) {
-        return 0.5f * (rec.normal + glm::vec3(1));
+        const auto target = rec.p + rec.normal + random_unit_vec3();
+        return 0.5f * ray_color(
+            { rec.p, target - rec.p },
+            world,
+            depth - 1
+        );
     }
 
     glm::vec3 unit_direction = glm::normalize(r.direction());
@@ -26,9 +35,10 @@ int main(int argc, char* argv[])
 {
     // Image
     const auto aspect_ratio = 16.0 / 9.0;
-    const int image_width = 1280;
+    const int image_width = 800;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     constexpr int samples_per_pixel = 100;
+    constexpr int max_depth = 50;
 
     // World
     HittableList world;
@@ -60,7 +70,7 @@ int main(int argc, char* argv[])
                 auto u = (i + du[s]) / (image_width - 1);
                 auto v = (row + dv[s]) / (image_height - 1);
                 auto r = cam.get_ray(u, v);
-                pixel_color += ray_color(r, world);
+                pixel_color += ray_color(r, world, max_depth);
             }
             *row_pm++ =
                 RGB(pixel_color / static_cast<float>(samples_per_pixel));

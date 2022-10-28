@@ -17,7 +17,7 @@ glm::vec3 ray_color(const Ray& r, const Hittable& world, int depth)
     }
 
     HitRecord rec;
-    if (world.hit(r, 0, infinity, rec)) {
+    if (world.hit(r, 0.001, infinity, rec)) {
         const auto target = rec.p + rec.normal + random_unit_vec3();
         return 0.5f * ray_color(
             { rec.p, target - rec.p },

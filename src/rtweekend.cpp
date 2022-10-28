@@ -2,13 +2,23 @@
 #include "debug.hpp"
 #include "Rand.hpp"
 #include <random>
+#include <thread>
 
-static rtx::Rand _rand;
+class ThreadLocalRand: public rtx::Rand
+{
+public:
+    ThreadLocalRand()
+        : rtx::Rand(std::hash<std::thread::id>{}(std::this_thread::get_id()))
+    {
+
+    }
+};
+
+static thread_local ThreadLocalRand _tlrand;
 
 float random_float()
 {
-    static std::uniform_real_distribution<float> dist;
-    return dist(_rand);
+    return std::uniform_real_distribution<float>{}(_tlrand);
 }
 
 float random_float(float min, float max)

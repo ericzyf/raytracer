@@ -72,8 +72,15 @@ int main(int argc, char* argv[])
                 auto r = cam.get_ray(u, v);
                 pixel_color += ray_color(r, world, max_depth);
             }
-            *row_pm++ =
-                RGB(pixel_color / static_cast<float>(samples_per_pixel));
+
+            // gamma correction
+            const auto p = glm::vec3(
+                std::sqrt(pixel_color.r / samples_per_pixel),
+                std::sqrt(pixel_color.g / samples_per_pixel),
+                std::sqrt(pixel_color.b / samples_per_pixel)
+            );
+
+            *row_pm++ = RGB(p);
         }
     };
 

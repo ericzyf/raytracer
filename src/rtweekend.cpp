@@ -1,6 +1,7 @@
 #include "rtweekend.hpp"
 #include "debug.hpp"
 #include "Rand.hpp"
+#include <glm/glm.hpp>
 #include <random>
 #include <thread>
 
@@ -25,5 +26,20 @@ float random_float(float min, float max)
 {
     debug_assert(min <= max);
     return min + (max - min) * random_float();
+}
+
+glm::vec3 random_unit_vec3()
+{
+    for (;;) {
+        const auto p = glm::vec3(
+            random_float(-1, 1),
+            random_float(-1, 1),
+            random_float(-1, 1)
+        );
+
+        if (glm::dot(p, p) < 1.0f) {
+            return p;
+        }
+    }
 }
 

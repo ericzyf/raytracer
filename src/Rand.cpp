@@ -125,8 +125,8 @@ void Rand::seed()
 
 void Rand::seed(const T t)
 {
-    s[0] = t;
-    s[1] = DEFAULT_STATE[1];
+    s[0] = DEFAULT_STATE[0];
+    s[1] = ~DEFAULT_STATE[1] ^ t;
     s[2] = DEFAULT_STATE[2];
     s[3] = DEFAULT_STATE[3];
 }

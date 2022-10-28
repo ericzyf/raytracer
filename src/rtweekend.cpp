@@ -38,7 +38,7 @@ glm::vec3 random_unit_vec3()
         );
 
         if (glm::dot(p, p) < 1.0f) {
-            return p;
+            return glm::normalize(p);
         }
     }
 }

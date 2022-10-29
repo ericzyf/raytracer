@@ -10,7 +10,7 @@
 
 using namespace rtx;
 
-glm::vec3 ray_color(const Ray& r, const Hittable& world, int depth)
+glm::vec3 ray_color(const Ray& r, const IHittable& world, int depth)
 {
     if (depth <= 0) {
         return glm::vec3(0);

@@ -15,28 +15,30 @@ struct HitRecord
     void set_face_normal(const Ray& r, glm::vec3 outward_normal);
 };
 
-class Hittable
+class IHittable
 {
 public:
     virtual bool
     hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const = 0;
+
+    virtual ~IHittable() = default;
 };
 
-class HittableList: public Hittable
+class HittableList: public IHittable
 {
 public:
     HittableList() = default;
 
-    explicit HittableList(std::unique_ptr<Hittable> obj);
+    explicit HittableList(std::unique_ptr<IHittable> obj);
 
     void clear();
 
-    void add(std::unique_ptr<Hittable> obj);
+    void add(std::unique_ptr<IHittable> obj);
 
     bool hit(const Ray&, float, float, HitRecord&) const override;
 
 private:
-    std::vector<std::unique_ptr<Hittable>> objects_;
+    std::vector<std::unique_ptr<IHittable>> objects_;
 };
 
 }  // namespace rtx

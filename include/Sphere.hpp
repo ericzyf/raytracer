@@ -3,7 +3,7 @@
 
 namespace rtx {
 
-class Sphere: public Hittable
+class Sphere: public IHittable
 {
 public:
     Sphere() = default;

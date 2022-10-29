@@ -9,7 +9,7 @@ void HitRecord::set_face_normal(const Ray& r, glm::vec3 outward_normal)
     normal = front_face ? outward_normal : -outward_normal;
 }
 
-HittableList::HittableList(std::unique_ptr<Hittable> obj)
+HittableList::HittableList(std::unique_ptr<IHittable> obj)
 {
     add(std::move(obj));
 }
@@ -19,7 +19,7 @@ void HittableList::clear()
     objects_.clear();
 }
 
-void HittableList::add(std::unique_ptr<Hittable> obj)
+void HittableList::add(std::unique_ptr<IHittable> obj)
 {
     objects_.push_back(std::move(obj));
 }

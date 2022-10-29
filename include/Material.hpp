@@ -12,6 +12,8 @@ public:
         glm::vec3& attenuation,
         Ray& scattered
     ) const = 0;
+
+    virtual ~IMaterial() = default;
 };
 
 }  // namespace rtx

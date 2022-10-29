@@ -1,7 +1,16 @@
+#include "debug.hpp"
 #include "Sphere.hpp"
 #include <glm/glm.hpp>
 
 namespace rtx {
+
+Sphere::Sphere(glm::vec3 cen, float r, const IMaterial& m)
+    : center_(cen),
+      radius_(r),
+      mat_ptr_(&m)
+{
+    debug_assert(r > 0);
+}
 
 bool Sphere::hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const
 {
@@ -29,6 +38,7 @@ bool Sphere::hit(const Ray& r, float t_min, float t_max, HitRecord& rec) const
     rec.p = r.at(root);
     const auto outward_normal = (rec.p - center_) / radius_;
     rec.set_face_normal(r, outward_normal);
+    rec.mat_ptr = mat_ptr_;
     return true;
 }
 

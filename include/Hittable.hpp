@@ -5,10 +5,13 @@
 
 namespace rtx {
 
+class IMaterial;
+
 struct HitRecord
 {
     glm::vec3 p;
     glm::vec3 normal;
+    const IMaterial* mat_ptr;
     float t;
     bool front_face;
 

@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
     auto render_samples = [&](std::vector<glm::vec3>& pm, const int si, const int sj)
     {
         debug_assert(si >= 0 && si < samples_per_pixel);
-        debug_assert(sj >= 0 && sj < samples_per_pixel);
+        debug_assert(sj >= 0 && sj <= samples_per_pixel);
         debug_assert(si <= sj);
 
         const auto num_samples = sj - si;

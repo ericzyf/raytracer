@@ -28,7 +28,7 @@ float random_float(float min, float max)
     return min + (max - min) * random_float();
 }
 
-glm::vec3 random_unit_vec3()
+glm::vec3 random_in_unit_sphere()
 {
     for (;;) {
         const auto p = glm::vec3(
@@ -38,9 +38,14 @@ glm::vec3 random_unit_vec3()
         );
 
         if (glm::dot(p, p) < 1.0f) {
-            return glm::normalize(p);
+            return p;
         }
     }
+}
+
+glm::vec3 random_unit_vec3()
+{
+    return glm::normalize(random_in_unit_sphere());
 }
 
 bool near_zero_vec3(glm::vec3 v)

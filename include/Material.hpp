@@ -1,6 +1,7 @@
 #pragma once
 #include "rtweekend.hpp"
 #include "Hittable.hpp"
+#include <glm/glm.hpp>
 
 namespace rtx {
 
@@ -44,6 +45,36 @@ public:
         scattered = { rec.p, scatter_direction };
         attenuation = albedo_;
         return true;
+    }
+
+private:
+    glm::vec3 albedo_;
+};
+
+class Metal: public IMaterial
+{
+public:
+    explicit Metal(glm::vec3 a)
+        : albedo_(a)
+    {
+
+    }
+
+    bool scatter(
+        const Ray& r_in,
+        const HitRecord& rec,
+        glm::vec3& attenuation,
+        Ray& scattered
+    ) const override
+    {
+        const auto reflected = glm::reflect(
+            glm::normalize(r_in.direction()),
+            rec.normal
+        );
+
+        scattered = { rec.p, reflected };
+        attenuation = albedo_;
+        return glm::dot(scattered.direction(), rec.normal) > 0.0f;
     }
 
 private:

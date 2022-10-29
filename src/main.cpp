@@ -45,8 +45,8 @@ int main(int argc, char* argv[])
     // World
     Material::Lambertian material_ground(glm::vec3(0.8, 0.8, 0));
     Material::Lambertian material_center(glm::vec3(0.7, 0.3, 0.3));
-    Material::Metal material_left(glm::vec3(0.8, 0.8, 0.8));
-    Material::Metal material_right(glm::vec3(0.8, 0.6, 0.2));
+    Material::Metal material_left(glm::vec3(0.8, 0.8, 0.8), 0.3);
+    Material::Metal material_right(glm::vec3(0.8, 0.6, 0.2), 1);
 
     HittableList world;
     world.add(

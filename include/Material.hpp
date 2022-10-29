@@ -1,4 +1,5 @@
 #pragma once
+#include "debug.hpp"
 #include "rtweekend.hpp"
 #include "Hittable.hpp"
 #include <glm/glm.hpp>
@@ -54,10 +55,11 @@ private:
 class Metal: public IMaterial
 {
 public:
-    explicit Metal(glm::vec3 a)
-        : albedo_(a)
+    explicit Metal(glm::vec3 a, float f)
+        : albedo_(a),
+          fuzz_(std::min(1.0f, f))
     {
-
+        debug_assert(fuzz_ >= 0);
     }
 
     bool scatter(
@@ -72,13 +74,17 @@ public:
             rec.normal
         );
 
-        scattered = { rec.p, reflected };
+        scattered = {
+            rec.p,
+            reflected + fuzz_ * random_in_unit_sphere()
+        };
         attenuation = albedo_;
         return glm::dot(scattered.direction(), rec.normal) > 0.0f;
     }
 
 private:
     glm::vec3 albedo_;
+    float fuzz_;
 };
 
 }  // namespace Material

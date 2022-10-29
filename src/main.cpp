@@ -37,6 +37,7 @@ int main(int argc, char* argv[])
     const auto aspect_ratio = 16.0 / 9.0;
     const int image_width = 1280;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
+    constexpr float inv_gamma = 1.0f / 2.2f;
     constexpr int samples_per_pixel = 100;
     constexpr int max_depth = 50;
 
@@ -74,13 +75,12 @@ int main(int argc, char* argv[])
             }
 
             // gamma correction
-            const auto p = glm::vec3(
-                std::sqrt(pixel_color.r / samples_per_pixel),
-                std::sqrt(pixel_color.g / samples_per_pixel),
-                std::sqrt(pixel_color.b / samples_per_pixel)
+            *row_pm++ = RGB(
+                glm::pow(
+                    pixel_color / static_cast<float>(samples_per_pixel),
+                    glm::vec3(inv_gamma)
+                )
             );
-
-            *row_pm++ = RGB(p);
         }
     };
 

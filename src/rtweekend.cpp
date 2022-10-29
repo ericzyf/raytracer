@@ -43,3 +43,12 @@ glm::vec3 random_unit_vec3()
     }
 }
 
+bool near_zero_vec3(glm::vec3 v)
+{
+    using std::fabs;
+
+    constexpr float s = 1e-8;
+    return fabs(v[0]) < s &&
+           fabs(v[1]) < s &&
+           fabs(v[2]) < s;
+}

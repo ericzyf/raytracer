@@ -16,3 +16,5 @@ float random_float(float min, float max);
 
 glm::vec3 random_unit_vec3();
 
+bool near_zero_vec3(glm::vec3 v);
+

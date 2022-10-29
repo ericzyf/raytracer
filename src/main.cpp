@@ -1,6 +1,7 @@
 #include "rtweekend.hpp"
 #include "debug.hpp"
 #include "Camera.hpp"
+#include "Material.hpp"
 #include "Pixmap.hpp"
 #include "Ray.hpp"
 #include "Sphere.hpp"
@@ -18,12 +19,12 @@ glm::vec3 ray_color(const Ray& r, const IHittable& world, int depth)
 
     HitRecord rec;
     if (world.hit(r, 0.001, infinity, rec)) {
-        const auto target = rec.p + rec.normal + random_unit_vec3();
-        return 0.5f * ray_color(
-            { rec.p, target - rec.p },
-            world,
-            depth - 1
-        );
+        Ray scattered;
+        glm::vec3 attenuation;
+        if (rec.mat_ptr->scatter(r, rec, attenuation, scattered)) {
+            return attenuation * ray_color(scattered, world, depth - 1);
+        }
+        return glm::vec3(0);
     }
 
     glm::vec3 unit_direction = glm::normalize(r.direction());
@@ -42,9 +43,24 @@ int main(int argc, char* argv[])
     constexpr int max_depth = 50;
 
     // World
+    Material::Lambertian material_ground(glm::vec3(0.8, 0.8, 0));
+    Material::Lambertian material_center(glm::vec3(0.7, 0.3, 0.3));
+    Material::Metal material_left(glm::vec3(0.8, 0.8, 0.8));
+    Material::Metal material_right(glm::vec3(0.8, 0.6, 0.2));
+
     HittableList world;
-    world.add(std::make_unique<Sphere>(glm::vec3(0, 0, -1), 0.5f));
-    world.add(std::make_unique<Sphere>(glm::vec3(0, -100.5f, -1), 100.0f));
+    world.add(
+        std::make_unique<Sphere>(glm::vec3(0, -100.5, -1), 100, material_ground)
+    );
+    world.add(
+        std::make_unique<Sphere>(glm::vec3(0, 0, -1), 0.5, material_center)
+    );
+    world.add(
+        std::make_unique<Sphere>(glm::vec3(-1, 0, -1), 0.5, material_left)
+    );
+    world.add(
+        std::make_unique<Sphere>(glm::vec3(1, 0, -1), 0.5, material_right)
+    );
 
     // Camera
     Camera cam;

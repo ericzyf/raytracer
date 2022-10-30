@@ -11,7 +11,9 @@ Camera::Camera(
     glm::vec3 lookat,
     glm::vec3 vup,
     float vfov,
-    float aspect_ratio
+    float aspect_ratio,
+    float aperture,
+    float focus_dist
 )
 {
     const auto theta = degrees_to_radians(vfov);
@@ -19,21 +21,24 @@ Camera::Camera(
     const auto viewport_height = 2 * h;
     const auto viewport_width = aspect_ratio * viewport_height;
 
-    const auto w = glm::normalize(lookfrom - lookat);
-    const auto u = glm::normalize(glm::cross(vup, w));
-    const auto v = glm::cross(w, u);
+    w_ = glm::normalize(lookfrom - lookat);
+    u_ = glm::normalize(glm::cross(vup, w_));
+    v_ = glm::cross(w_, u_);
 
     origin_ = lookfrom;
-    horizontal_ = viewport_width * u;
-    vertical_ = viewport_height * v;
-    ll_corner_ = origin_ - horizontal_ / 2.0f - vertical_ / 2.0f - w;
+    horizontal_ = focus_dist * viewport_width * u_;
+    vertical_ = focus_dist * viewport_height * v_;
+    ll_corner_ = origin_ - horizontal_ / 2.0f - vertical_ / 2.0f - focus_dist * w_;
+    lens_radius_ = aperture / 2;
 }
 
-Ray Camera::get_ray(float u, float v) const
+Ray Camera::get_ray(float s, float t) const
 {
+    const auto rd = lens_radius_ * random_in_unit_disk();
+    const auto offset = rd.x * u_ + rd.y * v_;
     return {
-        origin_,
-        ll_corner_ + u * horizontal_ + v * vertical_ - origin_
+        origin_ + offset,
+        ll_corner_ + s * horizontal_ + t * vertical_ - origin_ - offset
     };
 }
 

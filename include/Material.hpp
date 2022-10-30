@@ -87,6 +87,37 @@ private:
     float fuzz_;
 };
 
+class Dielectric: public IMaterial
+{
+public:
+    explicit Dielectric(float ir)
+        : ir_(ir)
+    {
+        debug_assert(ir > 0.0f);
+    }
+
+    bool scatter(
+        const Ray& r_in,
+        const HitRecord& rec,
+        glm::vec3& attenuation,
+        Ray& scattered
+    ) const override
+    {
+        attenuation = glm::vec3(1);
+        const float refraction_ratio = rec.front_face ? (1.0f / ir_) : ir_;
+
+        const auto unit_direction = glm::normalize(r_in.direction());
+        const auto refracted =
+            glm::refract(unit_direction, rec.normal, refraction_ratio);
+
+        scattered = { rec.p, refracted };
+        return true;
+    }
+
+private:
+    float ir_;
+};
+
 }  // namespace Material
 
 }  // namespace rtx

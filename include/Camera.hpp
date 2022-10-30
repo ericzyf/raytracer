@@ -6,7 +6,7 @@ namespace rtx {
 class Camera
 {
 public:
-    Camera();
+    Camera(float vfov, float aspect_ratio);
 
     Ray get_ray(float u, float v) const;
 

@@ -1,13 +1,17 @@
 #include "Camera.hpp"
 #include "debug.hpp"
+#include "rtweekend.hpp"
+#include <cmath>
 
 namespace rtx {
 
-Camera::Camera()
+Camera::Camera(float vfov, float aspect_ratio)
 {
-    constexpr auto aspect_ratio = 16.0f / 9.0f;
-    constexpr auto viewport_height = 2.0f;
-    constexpr auto viewport_width = aspect_ratio * viewport_height;
+    const auto theta = degrees_to_radians(vfov);
+    const auto h = std::tan(theta / 2);
+    const auto viewport_height = 2 * h;
+    const auto viewport_width = aspect_ratio * viewport_height;
+
     constexpr auto focal_length = 1.0f;
 
     origin_ = glm::vec3(0);

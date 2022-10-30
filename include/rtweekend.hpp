@@ -20,3 +20,5 @@ glm::vec3 random_unit_vec3();
 
 bool near_zero_vec3(glm::vec3 v);
 
+glm::vec3 random_in_unit_disk();
+

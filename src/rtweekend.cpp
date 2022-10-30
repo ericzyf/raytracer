@@ -57,3 +57,11 @@ bool near_zero_vec3(glm::vec3 v)
            fabs(v[1]) < s &&
            fabs(v[2]) < s;
 }
+
+glm::vec3 random_in_unit_disk()
+{
+    // https://mathworld.wolfram.com/DiskPointPicking.html
+    const auto sqrt_r = std::sqrt(random_float());
+    const auto theta = random_float(0, 2 * pi);
+    return glm::vec3(sqrt_r * std::cos(theta), sqrt_r * std::sin(theta), 0);
+}

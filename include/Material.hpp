@@ -107,15 +107,33 @@ public:
         const float refraction_ratio = rec.front_face ? (1.0f / ir_) : ir_;
 
         const auto unit_direction = glm::normalize(r_in.direction());
-        const auto refracted =
-            glm::refract(unit_direction, rec.normal, refraction_ratio);
+        const float cos_theta = glm::dot(-unit_direction, rec.normal);
+        const float sin_theta = std::sqrt(1.0f - cos_theta * cos_theta);
 
-        scattered = { rec.p, refracted };
+        glm::vec3 direction;
+        const bool cannot_refract =
+            refraction_ratio * sin_theta > 1.0f ||
+            reflectance(cos_theta, refraction_ratio) > random_float();
+        if (cannot_refract) {
+            direction = glm::reflect(unit_direction, rec.normal);
+        } else {
+            direction = glm::refract(unit_direction, rec.normal, refraction_ratio);
+        }
+
+        scattered = { rec.p, direction };
         return true;
     }
 
 private:
     float ir_;
+
+    static float reflectance(float cosine, float ref_idx)
+    {
+        // Use Schlick's approximation for reflectance.
+        auto r0 = (1 - ref_idx) / (1 + ref_idx);
+        r0 *= r0;
+        return r0 + (1 - r0) * std::pow(1 - cosine, 5);
+    }
 };
 
 }  // namespace Material

@@ -6,7 +6,13 @@ namespace rtx {
 class Camera
 {
 public:
-    Camera(float vfov, float aspect_ratio);
+    Camera(
+        glm::vec3 lookfrom,
+        glm::vec3 lookat,
+        glm::vec3 vup,
+        float vfov,
+        float aspect_ratio
+    );
 
     Ray get_ray(float u, float v) const;
 

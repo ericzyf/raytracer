@@ -7,11 +7,12 @@
 #include "Sphere.hpp"
 #include <fmt/core.h>
 #include <glm/glm.hpp>
+#include <mutex>
 #include <thread>
 
 using namespace rtx;
 
-glm::vec3 ray_color(const Ray& r, const IHittable& world, int depth)
+static glm::vec3 ray_color(const Ray& r, const IHittable& world, int depth)
 {
     if (depth <= 0) {
         return glm::vec3(0);
@@ -76,6 +77,9 @@ int main(int argc, char* argv[])
         ds[i].y = random_float();
     }
 
+    int finished_samples = 0;
+    std::mutex finished_samples_mutex;
+
     auto render_samples = [&](std::vector<glm::vec3>& pm, const int si, const int sj)
     {
         debug_assert(si >= 0 && si < samples_per_pixel);
@@ -104,6 +108,12 @@ int main(int argc, char* argv[])
                     glm::vec3(inv_gamma)
                 );
             }
+        }
+
+        {
+            std::lock_guard lg(finished_samples_mutex);
+            finished_samples += num_samples;
+            fmt::print("Sampling progress: {}/{}\n", finished_samples, samples_per_pixel);
         }
     };
 
@@ -150,5 +160,6 @@ int main(int argc, char* argv[])
     }
 
     pm.write_bmp("image.bmp");
+    fmt::print("Done\n");
 }
 

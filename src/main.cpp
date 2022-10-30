@@ -33,38 +33,103 @@ static glm::vec3 ray_color(const Ray& r, const IHittable& world, int depth)
     return (1.0f - t) * glm::vec3(1) + t * glm::vec3(0.5, 0.7, 1.0);
 }
 
-int main(int argc, char* argv[])
+static HittableList random_scene()
 {
-    // Image
-    constexpr auto aspect_ratio = 16.0 / 9.0;
-    constexpr int image_width = 1280;
-    constexpr int image_height = static_cast<int>(image_width / aspect_ratio);
-    constexpr float inv_gamma = 1.0f / 2.2f;
-    constexpr int samples_per_pixel = 100;
-    constexpr int max_depth = 50;
+    static const Material::Lambertian ground_material(glm::vec3(0.5));
+    static std::vector<std::unique_ptr<IMaterial>> sphere_materials;
 
-    // World
-    Material::Lambertian material_ground(glm::vec3(0.8, 0.8, 0));
-    Material::Dielectric material_center(1.5f);
-    Material::Dielectric material_left(1.5f);
-    Material::Metal material_right(glm::vec3(0.8, 0.6, 0.2), 1);
+    sphere_materials.clear();
 
     HittableList world;
     world.add(
-        std::make_unique<Sphere>(glm::vec3(0, -100.5, -1), 100, material_ground)
-    );
-    world.add(
-        std::make_unique<Sphere>(glm::vec3(0, 0, -1), 0.5, material_center)
-    );
-    world.add(
-        std::make_unique<Sphere>(glm::vec3(-1, 0, -1), 0.5, material_left)
-    );
-    world.add(
-        std::make_unique<Sphere>(glm::vec3(1, 0, -1), 0.5, material_right)
+        std::make_unique<Sphere>(glm::vec3(0, -1000, 0), 1000, ground_material)
     );
 
+    for (int a = -11; a < 11; ++a) {
+        for (int b = -11; b < 11; ++b) {
+            const auto choose_mat = random_float();
+            const glm::vec3 center(
+                a + 0.9f * random_float(),
+                0.2,
+                b + 0.9f * random_float()
+            );
+
+            if (glm::distance(center, glm::vec3(4, 0.2f, 0)) > 0.9f) {
+                if (choose_mat < 0.8f) {
+                    // diffuse
+                    const glm::vec3 albedo(
+                        random_float() * random_float(),
+                        random_float() * random_float(),
+                        random_float() * random_float()
+                    );
+                    sphere_materials.push_back(
+                        std::make_unique<Material::Lambertian>(albedo)
+                    );
+                } else if (choose_mat < 0.95f) {
+                    // metal
+                    const glm::vec3 albedo(
+                        random_float(0.5f, 1),
+                        random_float(0.5f, 1),
+                        random_float(0.5f, 1)
+                    );
+                    const auto fuzz = random_float(0, 0.5f);
+                    sphere_materials.push_back(
+                        std::make_unique<Material::Metal>(albedo, fuzz)
+                    );
+                } else {
+                    // glass
+                    sphere_materials.push_back(
+                        std::make_unique<Material::Dielectric>(1.5f)
+                    );
+                }
+
+                world.add(
+                    std::make_unique<Sphere>(center, 0.2f, *sphere_materials.back())
+                );
+            }
+        }
+    }
+
+    static const Material::Dielectric material1(1.5f);
+    world.add(std::make_unique<Sphere>(glm::vec3(0, 1, 0), 1, material1));
+
+    static const Material::Lambertian material2(glm::vec3(0.4f, 0.2f, 0.1f));
+    world.add(std::make_unique<Sphere>(glm::vec3(-4, 1, 0), 1, material2));
+
+    static const Material::Metal material3(glm::vec3(0.7f, 0.6f, 0.5f), 0);
+    world.add(std::make_unique<Sphere>(glm::vec3(4, 1, 0), 1, material3));
+
+    return world;
+}
+
+int main(int argc, char* argv[])
+{
+    // Image
+    constexpr auto aspect_ratio = 3.0f / 2.0f;
+    constexpr int image_width = 1200;
+    constexpr int image_height = static_cast<int>(image_width / aspect_ratio);
+    constexpr float inv_gamma = 1.0f / 2.2f;
+    constexpr int samples_per_pixel = 500;
+    constexpr int max_depth = 50;
+
+    // World
+    HittableList world = random_scene();
+
     // Camera
-    Camera cam;
+    const glm::vec3 lookfrom(13, 2, 3);
+    const glm::vec3 lookat(0, 0, 0);
+    const glm::vec3 vup(0, 1, 0);
+    const float dist_to_focus = 10;
+    const float aperture = 0.1f;
+    Camera cam(
+        lookfrom,
+        lookat,
+        vup,
+        20,
+        aspect_ratio,
+        aperture,
+        dist_to_focus
+    );
 
     // Render
     struct {
